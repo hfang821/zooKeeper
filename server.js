@@ -43,13 +43,30 @@ function filterByQuery(query,animalsArray){
     return filteredResults;
 } 
 
+function findById(id,animalsArray) {
+    const result = animalsArray.filter(animals => animals.id === id)[0];
+    return result;
+}
+
 app.get('/api/animals',(req, res) => {
     let results = animals;
+    //req.query is multifaceted(combining multiple parameters)
     if(req.query){
         results = filterByQuery(req.query,results);
     }
     console.log(req.query)
     res.json(results);
+});
+
+app.get('./api/animals/:id',(req, res)=>{
+    //not using filterByQuery here because we know that we are returning a single animal and id is unique. && no query on a single animal.
+    //req.param is specific to a single property
+    const result = findById(req.params.id,animals);
+    if(result){
+        res.json(result);
+    } else {
+        res.send(404);
+    }
 });
 
 app.listen(PORT, ()=>{
