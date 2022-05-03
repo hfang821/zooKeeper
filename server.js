@@ -8,6 +8,7 @@ const app = express();
 app.use(express.urlencoded({ extended:true}));
 //parse incoming JSON data into the req.body javascript object
 app.use(express.json());
+app.use(express.static('public'));
 
 function filterByQuery(query,animalsArray){
     let personalityTraitsArray = [];
@@ -125,6 +126,22 @@ app.post('/api/animals',(req,res)=>{
     }
 });
 
+app.get('/',(req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepr-public/index.html'));
+});
+
+app.get('/animals',(req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepr-public/animals.html'));
+})
+
+app.get('/zookeepers',(req, res)=>{
+    res.sendFile(path.join(__dirname, './public/zookeepr-public/zookeepers.html'))
+})
+
+//the * will act as a wildcard and any route that wasn't defined will fall under this request.
+app.get('*',(req, res) => {
+    res.sendFile(path.join(__dirname, './public/zookeepr-public/index.html'));
+})
 
 app.listen(PORT, ()=>{
     console.log(`API server now on port ${PORT}!`);
